@@ -259,8 +259,6 @@ public class UserDAO {
         
         preparedStatement.close(); 
         
-        System.out.print(validUser);
-        
         return validUser;
     }
     
@@ -285,6 +283,34 @@ public class UserDAO {
     	}
     	return found;
     	
+    }
+    
+    public User getUser(String email) throws SQLException{
+    	User user = null;
+    	
+    	String sql = "SELECT * FROM USERS WHERE email = ?";
+    	
+    	connect_func();
+        
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+         
+        if (resultSet.next()) {
+            String firstName = resultSet.getString("firstName");
+            String lastName = resultSet.getString("lastName");
+            String gender = resultSet.getString("gender");
+            int age = resultSet.getInt("age");
+            int numFollowers = resultSet.getInt("numFollowers");
+            int numFollowings = resultSet.getInt("numFollowings");
+            
+            user = new User(email, firstName, lastName, gender, age, numFollowers, numFollowings);
+        }
+         
+        resultSet.close();
+    	
+    	return user;
     }
     
     

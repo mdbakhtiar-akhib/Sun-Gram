@@ -61,7 +61,10 @@ public class ControlServlet extends HttpServlet {
             case "/feedRoot":
             	feedRootViewer(request, response);
             	break;
-            }
+            case "/PostImage":
+            	postImage(request, response);
+            	break;
+            }   
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
@@ -144,7 +147,8 @@ public class ControlServlet extends HttpServlet {
         userExists = userDAO.loginUser(user);
         
         if(userExists) {
-        	
+        	user = userDAO.getUser(Email);
+        	System.out.println(user.getEmail());
         	session= request.getSession();
         	session.setAttribute("currentUser", user.getEmail());
         	session.setAttribute("currentUserFname", user.getFirstName());
@@ -162,7 +166,9 @@ public class ControlServlet extends HttpServlet {
         }
     }
     
-    private void feedViewer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void feedViewer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+    	List<images> listImages = imagesDAO.listAllImages();
+    	request.setAttribute("listImages", listImages);
     	RequestDispatcher dispatcher = request.getRequestDispatcher("FeedPage.jsp");
         dispatcher.forward(request, response);
     }
@@ -170,6 +176,32 @@ public class ControlServlet extends HttpServlet {
     private void feedRootViewer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	RequestDispatcher dispatcher = request.getRequestDispatcher("FeedPageRoot.jsp");
         dispatcher.forward(request, response);
+    }
+    
+    private void postImage(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+    	PrintWriter out = response.getWriter();
+    	
+    	String userID = request.getParameter("Userid");
+    	String url = request.getParameter("url");
+    	String tags = request.getParameter("tags");
+    	String description = request.getParameter("description");
+    	
+    	String[] tagsSplitted = tags.split(", ");
+    		
+    	images newImage = new images(url, description, userID, tagsSplitted);
+    	
+    	boolean success = imagesDAO.insertImage(newImage);
+    	
+    	
+    	if(success) {
+    		imagesDAO.insertImageTags(newImage);
+    		response.sendRedirect("feed");
+    	}
+    	else {
+    		out.print("<script>alert('Image posting failed, please try again');window.location='PostImage.jsp'</script>");
+    	}
+    	
     }
 
 }

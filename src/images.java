@@ -5,6 +5,7 @@ public class images {
     protected String url;
     protected String description;
     protected String postuser;
+    protected String[] tags;
     protected static DateFormat Datetime;
     
  
@@ -15,16 +16,28 @@ public class images {
         this.imageid = imageid;
     }
  
-    public images(int imageid, String url, String description, String postuser, DateFormat Fatetime) {
-        this(url, description, postuser, Datetime);
+    public images(int imageid, String url, String description, String postuser, String[] tags) {
+        this(url, description, postuser, tags);
         this.imageid = imageid;
     }
      
-    public images(String url, String description, String postuser, DateFormat Datetime) {
+    public images(String url, String description, String postuser, String[] tags) {
         this.url = url;
         this.description = description;
         this.postuser = postuser;
-        this.Datetime = Datetime;
+        
+        this.tags = new String[tags.length];
+        
+        for(int i = 0; i < tags.length; i++) {
+        	this.tags[i] = tags[i];
+        }
+    }
+    
+    public images(int imageid, String url, String description, String postuser) {
+    	this.imageid = imageid;
+        this.url = url;
+        this.description = description;
+        this.postuser = postuser;
     }
  
     public int getimageid() {
@@ -65,6 +78,18 @@ public class images {
  
     public void setDatetime(DateFormat Datetime) {
         this.Datetime = Datetime;
+    }
+    
+    public void settags(String[] tags) {
+    	this.tags = new String[tags.length];
+        
+        for(int i = 0; i < tags.length; i++) {
+        	this.tags[i] = tags[i];
+        }
+    }
+    
+    public String[] gettags() {
+    	return tags;
     }
     
 }

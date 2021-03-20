@@ -6,6 +6,8 @@ public class User {
     protected String lastName;
     protected String gender;
     protected int age;
+    protected int numFollowers;
+    protected int numFollowings;
  
     public User() {
     }
@@ -26,6 +28,17 @@ public class User {
         this.lastName = lastName;
         this.gender = gender;
         this.age = age;
+    }
+    
+    public User(String email, String firstName, String lastName, String gender, int age, int numFollowers, int numFollowings) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.age = age;
+        this.numFollowers = numFollowers;
+        this.numFollowings = numFollowings;
     }
     
     public User(String email, String password) {
@@ -77,8 +90,24 @@ public class User {
     	return age;
     }
     
-    public void setBirthDay(int age) {
+    public void setAge(int age) {
     	this.age = age;
+    }
+    
+    public int getNumFollowers(){
+    	return numFollowers;
+    }
+    
+    public void setNumFollowers(int numFollowers) {
+    	this.numFollowers = numFollowers;
+    }
+    
+    public int getNumFollowings() {
+    	return numFollowings;
+    }
+    
+    public void setNumFollowings(int numFollowings) {
+    	this.numFollowings = numFollowings;
     }
  
     

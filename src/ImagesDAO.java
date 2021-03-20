@@ -145,6 +145,50 @@ public class ImagesDAO {
         disconnect(); 
     }
     
+    public boolean insertImage(images image) throws SQLException {
+    	connect_func();         
+		String sql = "insert into images (url, description, postUser) values (?, ?, ?)";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		preparedStatement.setString(1, image.url);
+		preparedStatement.setString(2, image.description);
+		preparedStatement.setString(3, image.postuser);
+		
+        boolean rowInserted = preparedStatement.executeUpdate() > 0;
+        ResultSet resultset = preparedStatement.getGeneratedKeys();
+        resultset.next();
+        int imageid = resultset.getInt(1);
+        System.out.println(imageid);
+        image.setimageid(imageid);
+        
+        preparedStatement.close();
+        return rowInserted;
+    } 
+    
+    public List<images> listAllImages() throws SQLException{
+    	List<images> listImages = new ArrayList<images>();
+    	
+    	String sql = "SELECT * FROM IMAGES ORDER BY imageid DESC";
+    	
+    	connect_func();
+    	
+    	statement = (Statement) connect.createStatement();
+    	ResultSet resultset = statement.executeQuery(sql);
+    	
+    	while(resultset.next()) {
+    		int imageid = resultset.getInt("imageid");
+    		String url = resultset.getString("url");
+    		String description = resultset.getString("description");
+    		String postuser = resultset.getString("postUser");
+    		
+    		images image = new images(imageid, url, description, postuser);
+    		listImages.add(image);
+    	}
+    	resultset.close();
+        statement.close();         
+        disconnect();        
+        return listImages;
+    }
+    
     //-------------------------------//
     //ImageTags table here
     //-------------------------------//
@@ -223,6 +267,26 @@ public class ImagesDAO {
         statement.close();         
         disconnect(); 
     }
+    
+    public boolean insertImageTags(images image) throws SQLException {
+    	connect_func();         
+		String sql = "insert into imagetags (imageid, tag) values (?, ?)";
+		
+		String[] tags = image.gettags();
+		
+		preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+		
+		for (int i = 0; i < tags.length; i++) {
+			
+			preparedStatement.setInt(1, image.imageid);
+			preparedStatement.setString(2, tags[i]);
+			
+	        boolean rowInserted = preparedStatement.executeUpdate() > 0;
+		}
+		
+        preparedStatement.close();
+        return true;
+    } 
     
     
     //-------------------------------//
