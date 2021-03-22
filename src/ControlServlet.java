@@ -64,6 +64,9 @@ public class ControlServlet extends HttpServlet {
             case "/PostImage":
             	postImage(request, response);
             	break;
+            case "/Profile":
+            	userProfile(request, response);
+            	break;
             }   
         } catch (SQLException ex) {
             throw new ServletException(ex);
@@ -202,6 +205,16 @@ public class ControlServlet extends HttpServlet {
     		out.print("<script>alert('Image posting failed, please try again');window.location='PostImage.jsp'</script>");
     	}
     	
+    }
+    
+    private void userProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+    	String Email = request.getParameter("email");
+    	System.out.println("I am in line 212" + Email);
+    	User user = userDAO.getUser(Email);
+    	System.out.println("I am in line 214 " + user.email);
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("Profile.jsp");
+    	request.setAttribute("user", user);
+        dispatcher.forward(request, response);
     }
 
 }

@@ -126,7 +126,7 @@ public class ImagesDAO {
     	
     	String sql10 ="INSERT INTO Images" + 
     			"(url, description, postUser)" + 
-    			"VALUES (\"https://lh3.googleusercontent.com/proxy/aKVfflV1r68rMWUS2uHebstXT4dOp4j5gMaAwjSUcNhPJKmQ1Wo5PdTzPaj37JCAzCeopDsDvUKESg7jdvb_NSe24hdG5q62QxRiKNxKVfmSE9ibObz7Itc-EMqs\","
+    			"VALUES (\"https://cdn.pixabay.com/photo/2016/09/07/11/37/tropical-1651426__340.jpg\","
     			+ " \"sunset sky trees bushes clouds \", \"Zara@mail.com\")";
     	
     	connect_func();      
@@ -179,6 +179,11 @@ public class ImagesDAO {
     		String url = resultset.getString("url");
     		String description = resultset.getString("description");
     		String postuser = resultset.getString("postUser");
+    		/*String[] tags = new String[getImageTags(imageid).size()];
+    		for (int i = 0; i < tags.length; i++) {
+    			tags[i] = getImageTags(imageid).get(i);
+    		}*/
+    		
     		
     		images image = new images(imageid, url, description, postuser);
     		listImages.add(image);
@@ -287,6 +292,31 @@ public class ImagesDAO {
         preparedStatement.close();
         return true;
     } 
+    
+    public List<String> getImageTags(int imageid) throws SQLException{
+    	List<String> listTags = new ArrayList<String>();
+    	
+    	String sql = "SELECT * FROM IMAGETAGS WHERE imageid = ?";
+    	
+    	connect_func();
+    	
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+    	
+    	preparedStatement.setInt(1, imageid);
+		
+    	ResultSet results = preparedStatement.executeQuery() ;
+    	
+    	while(results.next()) {
+    		String tag = results.getString("tag");
+    
+    		listTags.add(tag);
+    	}
+    	
+    	results.close();
+    	preparedStatement.close();         
+        disconnect();        
+        return listTags;
+    }
     
     
     //-------------------------------//

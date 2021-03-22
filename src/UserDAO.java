@@ -309,7 +309,7 @@ public class UserDAO {
         }
          
         resultSet.close();
-    	
+    	System.out.println("Hello friends Im here" + user);
     	return user;
     }
     
